@@ -177,11 +177,14 @@ public class HtmUtils
 	prepend with conventional URL prefix, e.g. "/tomcat/biocomp/js".
 	If path specified, then include unmodified (could be via
 	Tomcat, httpd, or external URL).
+
+	proxy_prefix normally "tomcat" or "jetty", and proxy via Apache to port 8080, 8081, etc.
   */
   public static String HeaderHtm(String title,
 	List<String> jsincludes, List<String> cssincludes,
 	String js, String css,
-	String color, HttpServletRequest request)
+	String color, HttpServletRequest request,
+	String proxy_prefix)
   {
     String htm=(
     "<!DOCTYPE html>\n"+
@@ -194,7 +197,7 @@ public class HtmUtils
         if (cssinclude.contains("/"))
           htm+=("<LINK REL=\"stylesheet\" HREF=\""+cssinclude+"\" />\n");
         else
-          htm+=("<LINK REL=\"stylesheet\" type=\"text/css\" HREF=\"/tomcat"+request.getContextPath()+"/css/"+cssinclude+"\" />\n");
+          htm+=("<LINK REL=\"stylesheet\" type=\"text/css\" HREF=\"/"+proxy_prefix+request.getContextPath()+"/css/"+cssinclude+"\" />\n");
       }
     }
     if (css!=null && !css.isEmpty())
@@ -206,7 +209,7 @@ public class HtmUtils
         if (jsinclude.contains("/"))
           htm+=("<SCRIPT SRC=\""+jsinclude+"\"></SCRIPT>\n");
         else
-          htm+=("<SCRIPT SRC=\"/tomcat"+request.getContextPath()+"/js/"+jsinclude+"\"></SCRIPT>\n");
+          htm+=("<SCRIPT SRC=\"/"+proxy_prefix+request.getContextPath()+"/js/"+jsinclude+"\"></SCRIPT>\n");
       }
     }
     if (js!=null && !js.isEmpty())
@@ -222,10 +225,11 @@ public class HtmUtils
 	List<String> jsincludes,
 	List<String> cssincludes,
 	String js,
+	String css,
 	String color,
 	HttpServletRequest request)
   {
-    return HeaderHtm(title,jsincludes,cssincludes,js,"",color,request);
+    return HeaderHtm(title, jsincludes, cssincludes, js, "", color, request, "tomcat");
   }
   /////////////////////////////////////////////////////////////////////////////
   /**	Output lines to HTML delimited by line breaks.
